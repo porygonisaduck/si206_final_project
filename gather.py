@@ -10,7 +10,7 @@ def setup_up_database(db_name):
     cur = conn.cursor()
 
     # create air table
-    cur.execute("CREATE TABLE IF NOT EXISTS air (air_id INTEGER AUTO_INCREMENT PRIMARY KEY, city_id INTEGER, observation_count INTEGER, observation_percent INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS air (air_id INTEGER PRIMARY KEY AUTOINCREMENT, city_id INTEGER, observation_count INTEGER, observation_percent INTEGER)")
 
     # create transportation table
     cur.execute("CREATE TABLE IF NOT EXISTS transportation (route_name TEXT PRIMARY KEY, city_id INTEGER, transportation_id INTEGER)")
@@ -19,7 +19,7 @@ def setup_up_database(db_name):
     cur.execute("CREATE TABLE IF NOT EXISTS cities (city_id INTEGER PRIMARY KEY, city_name TEXT)")
 
     # create types of transportation table
-    cur.execute("CREATE TABLE IF NOT EXISTS typeOfTrans (transportation_id INTEGER AUTO_INCREMENT PRIMARY KEY, transportation_type TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS typeOfTrans (transportation_id INTEGER PRIMARY KEY AUTOINCREMENT, transportation_type TEXT)")
 
     conn.commit()
     return cur, conn
