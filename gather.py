@@ -13,12 +13,17 @@ def setup_up_database(db_name):
     cur.execute("CREATE TABLE IF NOT EXISTS air (air_id INTEGER AUTO_INCREMENT PRIMARY KEY, city_id INTEGER, observation_count INTEGER, observation_percent INTEGER)")
 
     # create transportation table
-    cur.execute("CREATE TABLE IF NOT EXISTS transportation (transportation_id INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS transportation (route_name TEXT PRIMARY KEY, city_id INTEGER, transportation_id INTEGER)")
 
     # create city table
     cur.execute("CREATE TABLE IF NOT EXISTS cities (city_id INTEGER PRIMARY KEY, city_name TEXT)")
 
+    # create types of transportation table
+    cur.execute("CREATE TABLE IF NOT EXISTS typeOfTrans (transportation_id INTEGER AUTO_INCREMENT PRIMARY KEY, transportation_type TEXT)")
+
+    conn.commit()
     return cur, conn
+
 
 def populate_city_database(cur, conn, cities):
 
@@ -37,8 +42,6 @@ def get_request(url, headers=None, params=None):
         page = requests.get(url, params)
     else:
         page = requests.get(url, headers=headers, params=params)
-
-    print(page.url)
 
     if page.status_code >= 200 and page.status_code < 300: # successful
         return json.loads(page.text)
@@ -70,12 +73,15 @@ def get_air_quality(city, cityBounds, cur, conn):
     city_id = cur.fetchone()[0]
 
     # get the air data
+    counter = 0
     while True:
-        counter = 0
 
         if counter%24 == 0:
             result = get_request(url, params=params)
             data = result["Data"]
+
+        if len(data) == 0: # some cities don't have data (ex: Detroit)
+            break
 
         # add data to database 25 at a time
         cur.execute("INSERT OR IGNORE INTO air (city_id, observation_count, observation_percent) VALUES (?, ?, ?)", (city_id, data[counter]["observation_count"], data[counter]["observation_percent"]))
@@ -83,7 +89,7 @@ def get_air_quality(city, cityBounds, cur, conn):
 
         counter += 1
 
-        if counter > (len(data)-1): # if all data has been read than exit
+        if counter == len(data): # if all data has been read then exit
             break
     
 
@@ -98,8 +104,57 @@ def get_route_number(city, cityBounds, cur, conn):
               "lon": cityBounds["lon"],
               }
     
-    result = get_request(url, headers=headers, params=params)
-    print(result)
+    # get networks for a city
+    networks = get_request(url, headers=headers, params=params)
+    for network in networks["networks"]:
+        network_id = network["network_id"]
+        network_location = network["network_location"]
+        # network_name = network["network_name"]
+
+        # get city id
+        cur.execute("SELECT city_id FROM cities WHERE city_name = ?", (network_location,))
+
+        temp = cur.fetchone()
+        if temp == None: # if we get a different city
+            continue
+
+        city_id = temp[0]
+
+        url = "https://external.transitapp.com/v3/public/routes_for_network"
+        params = {"network_id": network_id}
+
+        # get the transportation data
+        counter = 0
+        while True:
+
+            if counter%24 == 0:
+                # sleep to avoid going over api requests per minutes
+                time.sleep(13)
+
+                # get number of routes for a network
+                result = get_request(url, headers=headers, params=params)
+                data = result["routes"]
+
+            mode_name = data[counter]["mode_name"]
+
+            # insert transportation mode
+            cur.execute("INSERT OR IGNORE INTO typeOfTrans (transportation_type) VALUES (?)", (mode_name,))
+            conn.commit()
+            
+            # get transportation mode id
+            cur.execute("SELECT transportation_id FROM typeOfTrans WHERE transportation_type = ?", (mode_name,))
+            
+            trans_id = cur.fetchone()[0]
+
+            # add data to database 25 at a time
+            cur.execute("INSERT OR IGNORE INTO transportation (route_name, city_id, transportation_id) VALUES (?, ?, ?)", (data[counter]["route_long_name"], city_id, trans_id))
+            conn.commit()
+
+            counter += 1
+
+            if counter > (len(data)-1): # if all data has been read than exit
+                break
+
 
 def main():
 
@@ -114,7 +169,7 @@ def main():
             "lat": 41.881832,
             "lon": -87.623177,
         },
-        "New York": {
+        "NYC": {
             "minlat": 40.492591,
             "maxlat": 40.915684,
             "minlon": -74.199838,
@@ -152,7 +207,7 @@ def main():
 
     for city in cities:
         get_air_quality(city, cities[city], cur, conn)
-        # get_route_number(city, cities[city], cur, conn)
+        get_route_number(city, cities[city], cur, conn)
         time.sleep(13) # transit only allows 5 calls per minute (12 seconds)
 
 if __name__ == "__main__":
