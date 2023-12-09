@@ -1,0 +1,27 @@
+{
+    "1": {
+        "name": "Chicago",
+        "air_score": 1,
+        "transportation_score": 3.752290304194423e-07
+    },
+    "2": {
+        "name": "New York",
+        "air_score": 1,
+        "transportation_score": 1.1996309455359154e-07
+    },
+    "3": {
+        "name": "Detroit",
+        "air_score": 1,
+        "transportation_score": 1.6119256708834642e-06
+    },
+    "4": {
+        "name": "Ann Arbor",
+        "air_score": 1,
+        "transportation_score": 8.342022940563087e-06
+    },
+    "5": {
+        "name": "Dallas",
+        "air_score": 1,
+        "transportation_score": 7.695006863946123e-07
+    }
+}
