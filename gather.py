@@ -2,6 +2,7 @@ import requests
 import sqlite3
 import json
 import time
+from bs4 import BeautifulSoup
 from decouple import config
 from requests.auth import HTTPBasicAuth
 
@@ -16,7 +17,7 @@ def setup_up_database(db_name):
     cur.execute("CREATE TABLE IF NOT EXISTS transportation (route_name TEXT PRIMARY KEY, city_id INTEGER, transportation_id INTEGER)")
 
     # create city table
-    cur.execute("CREATE TABLE IF NOT EXISTS cities (city_id INTEGER PRIMARY KEY, city_name TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS cities (city_id INTEGER PRIMARY KEY, city_name TEXT, population INTEGER)")
 
     # create types of transportation table
     cur.execute("CREATE TABLE IF NOT EXISTS typeOfTrans (transportation_id INTEGER PRIMARY KEY AUTOINCREMENT, transportation_type TEXT)")
@@ -28,12 +29,21 @@ def setup_up_database(db_name):
 def populate_city_database(cur, conn, cities):
 
     counter = 1
+    soup = BeautifulSoup(requests.get('https://en.wikipedia.org/wiki/List_of_United_States_cities_by_population').text, 'html.parser')
     for city in cities:
-        cur.execute("INSERT OR IGNORE INTO cities (city_id, city_name) VALUES (?, ?)", (counter, city))
+        population = get_population(soup, city)
+        cur.execute("INSERT OR IGNORE INTO cities (city_id, city_name, population) VALUES (?, ?, ?)", (counter, city, population))
         counter += 1
 
     conn.commit()
 
+def get_population(soup, city):
+    table = soup.find('table', class_='wikitable sortable')
+    rows = table.find_all('tr')
+    for row in rows:
+        info = row.text.split('\n')
+        if city in info[3]:
+            return int(info[7].replace(',', ''))
 
 def get_request(url, headers=None, params=None):
     '''
@@ -169,7 +179,7 @@ def main():
             "lat": 41.881832,
             "lon": -87.623177,
         },
-        "NYC": {
+        "New York": {
             "minlat": 40.492591,
             "maxlat": 40.915684,
             "minlon": -74.199838,
@@ -212,12 +222,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
