@@ -45,10 +45,7 @@ def scatter_plot(data):
     plt.subplot(212)
 
     city_data = data['cities']
-    city_names = [city_data[city_id]['name'] for city_id in city_data]
-    colors = []
-    for i in range(len(city_names)):
-        colors.append('#%06X' % randint(0, 0xFFFFFF))
+    city_names = []
     x = []
     y = []
     for city_id in city_data:
@@ -57,9 +54,11 @@ def scatter_plot(data):
         if isinstance(air_quality, float):
             x.append(city['population']/len(city['transportation']))
             y.append(air_quality)
-    plt.xlabel("City Population per Transportation Routes")
+            city_names.append(city['name'])
+    plt.xlabel("City Population per Transportation Route")
     plt.ylabel("Average PM2.5 Air Quality")
-    plt.legend(city_names)
+    for i, txt in enumerate(city_names):
+        plt.annotate(txt, (x[i], y[i]))
     plt.title("Per Capita Transportation and Air Quality")
     plt.scatter(x, y)
     z = np.polyfit(x, y, 1)

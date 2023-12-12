@@ -2,7 +2,7 @@
     "cities": {
         "1": {
             "name": "Chicago",
-            "air_quality": 95.06761917686059,
+            "air_quality": 10.717430499999999,
             "transportation": {
                 "'L'": 8,
                 "Bus": 253,
@@ -12,7 +12,7 @@
         },
         "2": {
             "name": "New York",
-            "air_quality": 91.93010605835941,
+            "air_quality": 8.92185240957448,
             "transportation": {
                 "Bus": 357,
                 "Commuter Rail": 13,
@@ -20,13 +20,13 @@
                 "Gondola": 1,
                 "PATH": 4,
                 "Subway": 20,
-                "\u2708\ufe0e AirTrain": 2
+                "\u2708\ufe0e AirTrain": 3
             },
             "population": 8335897
         },
         "3": {
             "name": "Detroit",
-            "air_quality": "N/A",
+            "air_quality": 14.761538449999993,
             "transportation": {
                 "Bus": 71,
                 "People Mover": 1,
@@ -44,7 +44,7 @@
         },
         "5": {
             "name": "Dallas",
-            "air_quality": 42.26801025827008,
+            "air_quality": 9.966670035714285,
             "transportation": {
                 "Bus": 89,
                 "Light Rail": 2,
@@ -57,14 +57,14 @@
         "Bus",
         "'L'",
         "Commuter Rail",
+        "People Mover",
+        "Streetcar",
+        "Light Rail",
+        "TRE",
         "Subway",
         "Ferry",
         "Gondola",
         "\u2708\ufe0e AirTrain",
-        "PATH",
-        "People Mover",
-        "Streetcar",
-        "Light Rail",
-        "TRE"
+        "PATH"
     ]
 }
