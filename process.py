@@ -22,6 +22,7 @@ def calculate_air_quality(city_id, cur, conn):
     else:
         return 'N/A'
 
+
 def calculate_transportation(city_id, cur, conn):
     """Sum up transportation routes for a city."""
 
@@ -39,6 +40,7 @@ def calculate_transportation(city_id, cur, conn):
         t_dict[data[0]] = int(data[1])
     return t_dict
 
+
 def get_population(city_id, cur, conn):
     """Get population count for a city."""
 
@@ -46,6 +48,7 @@ def get_population(city_id, cur, conn):
     cur.execute("SELECT population FROM cities WHERE city_id = ?", (city_id,))
     population = cur.fetchone()[0]
     return population
+
 
 def main():
 
