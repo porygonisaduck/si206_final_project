@@ -7,7 +7,7 @@ from random import randint
 def bar_graph(data):
     """Plot stacked bar graph of transportation types."""
 
-    plt.subplot(211)
+    plt.subplot(221)
     
     city_data = data['cities']
     t_types = data['transportation_types']
@@ -44,7 +44,7 @@ def bar_graph(data):
 def scatter_plot(data):
     """Plot data points of population/transportation with air quality."""
 
-    plt.subplot(212)
+    plt.subplot(223)
 
     city_data = data['cities']
     city_names = []
@@ -54,14 +54,42 @@ def scatter_plot(data):
         city = city_data[city_id]
         air_quality = city['air_quality']
         if isinstance(air_quality, float):
-            x.append(city['population']/len(city['transportation']))
+            routes = sum([city['transportation'][route] for route in city['transportation']])
+            x.append(routes)
             y.append(air_quality)
             city_names.append(city['name'])
-    plt.xlabel("City Population per Transportation Route")
+    plt.xlabel("Transportation Routes")
     plt.ylabel("Average PM2.5 Air Quality")
     for i, txt in enumerate(city_names):
         plt.annotate(txt, (x[i], y[i]))
-    plt.title("Per Capita Transportation and Air Quality")
+    plt.title("Transportation Routes and Air Quality")
+    plt.scatter(x, y)
+    z = np.polyfit(x, y, 1)
+    p = np.poly1d(z)
+    plt.plot(x, p(x), color="r", linestyle=':', linewidth=1)
+
+def population_scatter_plot(data):
+    """Plot data points of population/transportation with air quality."""
+
+    plt.subplot(224)
+
+    city_data = data['cities']
+    city_names = []
+    x = []
+    y = []
+    for city_id in city_data:
+        city = city_data[city_id]
+        air_quality = city['air_quality']
+        if isinstance(air_quality, float):
+            routes = sum([city['transportation'][route] for route in city['transportation']])
+            x.append(routes/city['population'])
+            y.append(air_quality)
+            city_names.append(city['name'])
+    plt.xlabel("Transportation Routes per Capita")
+    plt.ylabel("Average PM2.5 Air Quality")
+    for i, txt in enumerate(city_names):
+        plt.annotate(txt, (x[i], y[i]))
+    plt.title("Transportation Routes per Capita and Air Quality")
     plt.scatter(x, y)
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
@@ -71,9 +99,9 @@ def scatter_plot(data):
 def main():
     with open("processed.json", "r") as infile:
         processed_data = json.load(infile)
-        # for city_data in processed_data:
         bar_graph(processed_data)
         scatter_plot(processed_data)
+        population_scatter_plot(processed_data)
         plt.show()
 
 
