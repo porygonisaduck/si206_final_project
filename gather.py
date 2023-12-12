@@ -124,6 +124,9 @@ def get_route_number(city, cityBounds, cur, conn):
         network_location = network["network_location"]
         # network_name = network["network_name"]
 
+        if network_location == "NYC":
+            network_location = "New York"
+
         # get city id
         cur.execute("SELECT city_id FROM cities WHERE city_name = ?", (network_location,))
 
