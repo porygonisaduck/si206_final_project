@@ -1,54 +1,70 @@
 {
-    "1": {
-        "name": "Chicago",
-        "air_quality": 95.06761917686059,
-        "transportation": {
-            "'L'": 8,
-            "Bus": 253,
-            "Commuter Rail": 12
+    "cities": {
+        "1": {
+            "name": "Chicago",
+            "air_quality": 95.06761917686059,
+            "transportation": {
+                "'L'": 8,
+                "Bus": 253,
+                "Commuter Rail": 12
+            },
+            "population": 2665039
         },
-        "population": 2665039
+        "2": {
+            "name": "New York",
+            "air_quality": 91.93010605835941,
+            "transportation": {
+                "Bus": 357,
+                "Commuter Rail": 13,
+                "Ferry": 28,
+                "Gondola": 1,
+                "PATH": 4,
+                "Subway": 20,
+                "\u2708\ufe0e AirTrain": 2
+            },
+            "population": 8335897
+        },
+        "3": {
+            "name": "Detroit",
+            "air_quality": "N/A",
+            "transportation": {
+                "Bus": 71,
+                "People Mover": 1,
+                "Streetcar": 1
+            },
+            "population": 620376
+        },
+        "4": {
+            "name": "Ann Arbor",
+            "air_quality": "N/A",
+            "transportation": {
+                "Bus": 42
+            },
+            "population": 119875
+        },
+        "5": {
+            "name": "Dallas",
+            "air_quality": 42.26801025827008,
+            "transportation": {
+                "Bus": 89,
+                "Light Rail": 2,
+                "TRE": 1
+            },
+            "population": 1299544
+        }
     },
-    "2": {
-        "name": "New York",
-        "air_quality": 91.93010605835941,
-        "transportation": {
-            "Bus": 357,
-            "Commuter Rail": 13,
-            "Ferry": 28,
-            "Gondola": 1,
-            "PATH": 4,
-            "Subway": 20,
-            "\u2708\ufe0e AirTrain": 2
-        },
-        "population": 8335897
-    },
-    "3": {
-        "name": "Detroit",
-        "air_quality": "N/A",
-        "transportation": {
-            "Bus": 71,
-            "People Mover": 1,
-            "Streetcar": 1
-        },
-        "population": 620376
-    },
-    "4": {
-        "name": "Ann Arbor",
-        "air_quality": "N/A",
-        "transportation": {
-            "Bus": 42
-        },
-        "population": 119875
-    },
-    "5": {
-        "name": "Dallas",
-        "air_quality": 42.26801025827008,
-        "transportation": {
-            "Bus": 89,
-            "Light Rail": 2,
-            "TRE": 1
-        },
-        "population": 1299544
-    }
+    "transportation_types": [
+        "Bus",
+        "'L'",
+        "Commuter Rail",
+        "Subway",
+        "Ferry",
+        "Gondola",
+        "\u2708\ufe0e AirTrain",
+        "PATH",
+        "People Mover",
+        "Streetcar",
+        "Light Rail",
+        "TRE"
+    ]
 }
