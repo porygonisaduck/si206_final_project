@@ -20,7 +20,7 @@ def setup_up_database(db_name):
     cur.execute("CREATE TABLE IF NOT EXISTS cities (city_id INTEGER PRIMARY KEY, city_name TEXT, population INTEGER)")
 
     # create types of transportation table
-    cur.execute("CREATE TABLE IF NOT EXISTS typeOfTrans (transportation_id INTEGER PRIMARY KEY AUTOINCREMENT, transportation_type TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS typeOfTrans (transportation_id INTEGER PRIMARY KEY AUTOINCREMENT, transportation_type TEXT UNIQUE)")
 
     conn.commit()
     return cur, conn
@@ -143,7 +143,7 @@ def get_route_number(city, cityBounds, cur, conn):
         counter = 0
         while True:
 
-            if counter%24 == 0:
+            if counter == 0:
                 # sleep to avoid going over api requests per minutes
                 time.sleep(13)
 
@@ -153,9 +153,14 @@ def get_route_number(city, cityBounds, cur, conn):
 
             mode_name = data[counter]["mode_name"]
 
-            # insert transportation mode
-            cur.execute("INSERT OR IGNORE INTO typeOfTrans (transportation_type) VALUES (?)", (mode_name,))
-            conn.commit()
+            # get transportation mode id
+            cur.execute("SELECT transportation_id FROM typeOfTrans WHERE transportation_type = ?", (mode_name,))
+            temp = cur.fetchone()
+
+            if temp == None: # if not found insert
+                # insert transportation mode
+                cur.execute("INSERT OR IGNORE INTO typeOfTrans (transportation_type) VALUES (?)", (mode_name,))
+                conn.commit()
             
             # get transportation mode id
             cur.execute("SELECT transportation_id FROM typeOfTrans WHERE transportation_type = ?", (mode_name,))
@@ -222,7 +227,7 @@ def main():
     populate_city_database(cur, conn, cities)
 
     for city in cities:
-        get_air_quality(city, cities[city], cur, conn)
+        # get_air_quality(city, cities[city], cur, conn)
         get_route_number(city, cities[city], cur, conn)
         time.sleep(13) # transit only allows 5 calls per minute (12 seconds)
 
