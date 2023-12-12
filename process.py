@@ -46,9 +46,11 @@ def calculate_transportation(city_id, cur, conn):
 
     # retrieve transportation data from database
     cur.execute("SELECT transportation_type, COUNT(*) "
-                "FROM transportation as T, typeOfTrans as S "
-                "WHERE city_id = ? AND T.transportation_id = S.transportation_id "
-                "GROUP BY S.transportation_type",
+                "FROM transportation "
+                "INNER JOIN typeOfTrans "
+                "ON transportation.transportation_id = typeOfTrans.transportation_id "
+                "WHERE transportation.city_id = ? "
+                "GROUP BY typeOfTrans.transportation_type",
                 (city_id,))
     t_data = cur.fetchall()
 
