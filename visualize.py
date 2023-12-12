@@ -57,11 +57,14 @@ def scatter_plot(data):
         if isinstance(air_quality, float):
             x.append(city['population']/len(city['transportation']))
             y.append(air_quality)
-    plt.xlabel("Average PM2.5 Air Quality")
-    plt.ylabel("City Population per Transportation Routes")
+    plt.xlabel("City Population per Transportation Routes")
+    plt.ylabel("Average PM2.5 Air Quality")
     plt.legend(city_names)
     plt.title("Per Capita Transportation and Air Quality")
     plt.scatter(x, y)
+    z = np.polyfit(x, y, 1)
+    p = np.poly1d(z)
+    plt.plot(x, p(x), color="r", linestyle=':', linewidth=1)
 
 
 def main():
