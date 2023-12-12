@@ -76,7 +76,7 @@ def main():
 
     # process data into a dictionary
     processed_data = {'cities': create_city_dict(cur, conn), 
-                      'transportation_types': create_transportation_types_dict(cur, conn)}
+                      'transportation_types': create_transportation_types_list(cur, conn)}
 
     # output dictionary into json file
     with open("processed.json", "w") as outfile:
