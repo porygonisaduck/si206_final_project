@@ -5,6 +5,7 @@ from random import randint
 
 
 def bar_graph(data):
+    """Plot stacked bar graph of transportation types."""
 
     plt.subplot(211)
     
@@ -12,7 +13,7 @@ def bar_graph(data):
     t_types = data['transportation_types']
     city_names = [city_data[city_id]['name'] for city_id in city_data]
     colors = []
-    for i in range(len(t_types)):
+    for _ in range(len(t_types)):
         colors.append('#%06X' % randint(0, 0xFFFFFF))
     y = []
     for type in t_types:
@@ -41,6 +42,7 @@ def bar_graph(data):
 
 
 def scatter_plot(data):
+    """Plot data points of population/transportation with air quality."""
 
     plt.subplot(212)
 
