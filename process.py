@@ -22,7 +22,7 @@ def create_city_dict(cur, conn):
     
     return city_dict
 
-def create_transportation_types_dict(cur, conn):
+def create_transportation_types_list(cur, conn):
     cur.execute("SELECT DISTINCT transportation_type FROM typeOfTrans")
     types = cur.fetchall()
     return [type[0] for type in types]
