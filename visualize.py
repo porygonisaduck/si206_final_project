@@ -7,8 +7,6 @@ from random import randint
 def bar_graph(data):
     """Plot stacked bar graph of transportation types."""
 
-    plt.subplot(221)
-    
     city_data = data['cities']
     t_types = data['transportation_types']
     city_names = [city_data[city_id]['name'] for city_id in city_data]
@@ -39,12 +37,11 @@ def bar_graph(data):
     plt.ylabel("Transportation Routes")
     plt.legend(t_types)
     plt.title("Transportation Route Totals For Cities")
+    plt.show()
 
 
 def scatter_plot(data):
     """Plot data points of population/transportation with air quality."""
-
-    plt.subplot(223)
 
     city_data = data['cities']
     city_names = []
@@ -67,11 +64,11 @@ def scatter_plot(data):
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
     plt.plot(x, p(x), color="r", linestyle=':', linewidth=1)
+    plt.show()
+
 
 def population_scatter_plot(data):
     """Plot data points of population/transportation with air quality."""
-
-    plt.subplot(224)
 
     city_data = data['cities']
     city_names = []
@@ -94,6 +91,8 @@ def population_scatter_plot(data):
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
     plt.plot(x, p(x), color="r", linestyle=':', linewidth=1)
+    plt.show()
+
 
 
 def main():
@@ -102,7 +101,6 @@ def main():
         bar_graph(processed_data)
         scatter_plot(processed_data)
         population_scatter_plot(processed_data)
-        plt.show()
 
 
 if __name__ == "__main__":
