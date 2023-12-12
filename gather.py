@@ -27,10 +27,12 @@ def setup_up_database(db_name):
 
 
 def populate_city_database(cur, conn, cities):
-
+    # insert cities into table with id, name, and population (web-scraped)
     counter = 1
+    # wikipedia article for population data
     soup = BeautifulSoup(requests.get('https://en.wikipedia.org/wiki/List_of_United_States_cities_by_population').text, 'html.parser')
     for city in cities:
+        # scrape population
         population = get_population(soup, city)
         cur.execute("INSERT OR IGNORE INTO cities (city_id, city_name, population) VALUES (?, ?, ?)", (counter, city, population))
         counter += 1
@@ -38,6 +40,7 @@ def populate_city_database(cur, conn, cities):
     conn.commit()
 
 def get_population(soup, city):
+    # find a city's current population estimate with given soup object
     table = soup.find('table', class_='wikitable sortable')
     rows = table.find_all('tr')
     for row in rows:
