@@ -28,23 +28,15 @@ def create_transportation_types_dict(cur, conn):
     return [type[0] for type in types]
 
 def calculate_air_quality(city_id, cur, conn):
-    """Compute weighted average of air quality for a city."""
+    """Compute average air quality for a city."""
 
-    # retrieve observation counts and percents from database
-    cur.execute("SELECT observation_count, observation_percent FROM air WHERE city_id = ?", (city_id,))
-    observation_counts = cur.fetchall()
+    # retrieve PM2.5 observations
+    cur.execute("SELECT PM25 FROM air WHERE city_id = ?", (city_id,))
+    observations = cur.fetchall()
 
-    # get total observation count
-    observations = sum([observation[0] for observation in observation_counts])
-    
-    if observations > 0:
-
-    # get a total sum of all observations
-        sum_air_quality = sum([observation[0]*observation[1] for observation in observation_counts])
-
-        # compute average air quality and return
-        average_air_quality = sum_air_quality/observations
-        return average_air_quality
+    if len(observations) > 0:
+    # compute avurage PM2.5
+        return sum([pm25[0] for pm25 in observations])/len(observations)
     else:
         return 'N/A'
 
