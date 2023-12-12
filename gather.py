@@ -11,7 +11,7 @@ def setup_up_database(db_name):
     cur = conn.cursor()
 
     # create air table
-    cur.execute("CREATE TABLE IF NOT EXISTS air (air_id INTEGER PRIMARY KEY AUTOINCREMENT, city_id INTEGER, observation_count INTEGER, observation_percent INTEGER)")
+    cur.execute("CREATE TABLE IF NOT EXISTS air (air_id INTEGER PRIMARY KEY AUTOINCREMENT, city_id INTEGER, PM25 INTEGER)")
 
     # create transportation table
     cur.execute("CREATE TABLE IF NOT EXISTS transportation (route_name TEXT PRIMARY KEY, city_id INTEGER, transportation_id INTEGER)")
@@ -72,7 +72,7 @@ def get_air_quality(city, cityBounds, cur, conn):
     url = "https://aqs.epa.gov/data/api/annualData/byBox"
     params = {"email": EMAIL,
               "key": AIR_API_KEY,
-              "param": 44201,
+              "param": "88101,88502",
               "bdate": 20230101,
               "edate": 20230201,
               "minlat": round(cityBounds["minlat"], 1),
@@ -97,7 +97,7 @@ def get_air_quality(city, cityBounds, cur, conn):
             break
 
         # add data to database 25 at a time
-        cur.execute("INSERT OR IGNORE INTO air (city_id, observation_count, observation_percent) VALUES (?, ?, ?)", (city_id, data[counter]["observation_count"], data[counter]["observation_percent"]))
+        cur.execute("INSERT OR IGNORE INTO air (city_id, PM25) VALUES (?, ?)", (city_id, data[counter]["arithmetic_mean"]))
         conn.commit()
 
         counter += 1
