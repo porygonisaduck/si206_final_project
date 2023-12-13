@@ -4,7 +4,7 @@ import numpy as np
 from random import randint
 
 
-def bar_graph(data):
+def stacked_bar_graph(data):
     """Plot stacked bar graph of transportation types."""
 
     city_data = data['cities']
@@ -37,6 +37,24 @@ def bar_graph(data):
     plt.ylabel("Transportation Routes")
     plt.legend(t_types)
     plt.title("Transportation Route Totals For Cities")
+    plt.show()
+
+def bar_graph(data):
+    """Plot bar graph of population data."""
+
+    city_data = data['cities']
+    city_names = [city_data[city_id]['name'] for city_id in city_data]
+    y = []
+    for city_id in city_data:
+            city = city_data[city_id]
+            population = city['population']
+            y.append(population)
+    
+    plt.bar(city_names, y, color='r')
+
+    plt.xlabel("Cities")
+    plt.ylabel("Estimated Population")
+    plt.title("Population For Cities")
     plt.show()
 
 
@@ -98,6 +116,7 @@ def population_scatter_plot(data):
 def main():
     with open("processed.json", "r") as infile:
         processed_data = json.load(infile)
+        stacked_bar_graph(processed_data)
         bar_graph(processed_data)
         scatter_plot(processed_data)
         population_scatter_plot(processed_data)
